@@ -31,14 +31,28 @@ export default class App extends Component {
       let response = await axios.get(url)
 
       console.log(response.data[0]);
-      this.setState({ location: response.data[0] }, this.getMapUrl)
+      this.setState({ location: response.data[0] }, this.getMapUrl, this.getWeather)
+      this.setState({error: false});
     } catch (e) {
       console.error(e);
       this.setState({ error: true })
+      console.log('there was an error, find it')
     }
 
   }
 
+  getWeather = async() => {
+    let city = this.state.locationObject.display_name.split(',')[0];
+    let url = `${process.env.REACT_APP_API_URL}/weather?city_name=${city}`;
+    try {
+      let results = await axios.get(url);
+      this.setState({weather: results.data})
+      this.setState({error: false})
+    } catch (e) {
+      this.setState({error:true})
+      this.setState({ weather: [] })
+    }
+  }
 
   getMapUrl = () => {
     let url = `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATION_KEY}&center=${this.state.location.lat},${this.state.location.lon}&zoom=10`
