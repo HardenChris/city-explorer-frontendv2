@@ -1,6 +1,5 @@
 import axios from 'axios';
 import React, { Component } from 'react';
-// import { Component } from 'react';
 
 export default class Weather extends Component {
 

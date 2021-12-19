@@ -8,6 +8,7 @@ import { Alert } from 'react-bootstrap';
 import Header from './Components/Header.js';
 import Main from './Components/Main.js';
 import Footer from './Components/Footer.js';
+import Movie from './Components/Movie.js';
 
 export default class App extends Component {
 
@@ -15,11 +16,18 @@ export default class App extends Component {
     super(props)
     this.state = {
       error: false,
-      location: {}
+      location: {},
+      weather: [],
+      movies: []
     }
   }
 
-
+  // getMovies = async () => {
+  //   const city_name = locationObject.display_name.split(',')[0];
+  //   const apiURL = `${process.env.REACT_APP_API_URL}/movies?city_name=${city_name}`;
+  //   let movieResponse = await axios.get(apiURL);
+  //   this.setState({ movies: movieResponse.data});
+  // }
 
 
   getLocation = async (city) => {
@@ -44,7 +52,7 @@ export default class App extends Component {
     let url = `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATION_KEY}&center=${this.state.location.lat},${this.state.location.lon}&zoom=10`
     this.setState({
       location: { ...this.state.location, map: url }
-    })
+    }, this.getMovies)
   }
 
   render() {
@@ -55,12 +63,12 @@ export default class App extends Component {
         {/* <p>{this.state.cityName}</p>
                 <button onClick={this.handleClick}>SEARCH</button> */}
         {this.state.location.map && <SearchCard location={this.state.location} />}
-
         {this.state.location.map && <Weather location={this.state.location} />}
         {this.state.error && <Alert variant='danger'>Something is broken.</Alert>}
-        <Header/>
-        <Main/>
-        <Footer/>
+        {this.state.location && <Movie location={this.state.location}/>}
+        <Header />
+        <Main />
+        <Footer />
       </>
     )
   }
